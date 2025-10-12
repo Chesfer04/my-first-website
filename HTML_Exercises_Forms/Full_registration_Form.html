@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration Form</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+    form {
+      width: 350px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+    .error {
+      color: red;
+      font-size: 12px;
+    }
+    .char-count {
+      font-size: 12px;
+      color: gray;
+    }
+    .toggle-btn {
+      cursor: pointer;
+      font-size: 12px;
+      color: blue;
+    }
+  </style>
+</head>
+<body>
+  <h2>Registration Form</h2>
+  <form id="regForm">
+    <label>Username:</label>
+    <input type="text" id="username" name="username">
+    <div id="usernameError" class="error"></div>
+
+    <label>Email:</label>
+    <input type="email" id="email" name="email">
+    <div id="emailError" class="error"></div>
+
+    <label>Password:</label>
+    <input type="password" id="password" name="password">
+    <span class="toggle-btn" id="togglePass">Show</span>
+    <div id="passwordError" class="error"></div>
+
+    <label>Confirm Password:</label>
+    <input type="password" id="confirmPassword" name="confirmPassword">
+    <div id="confirmPasswordError" class="error"></div>
+
+    <label>Gender:</label>
+    <input type="radio" name="gender" value="Male"> Male
+    <input type="radio" name="gender" value="Female"> Female
+    <div id="genderError" class="error"></div>
+
+    <label>Interests:</label>
+    <input type="checkbox" name="interests" value="Sports"> Sports
+    <input type="checkbox" name="interests" value="Music"> Music
+    <input type="checkbox" name="interests" value="Travel"> Travel
+    <div id="interestsError" class="error"></div>
+
+    <label>Bio:</label>
+    <textarea id="bio" rows="4" maxlength="150"></textarea>
+    <div class="char-count" id="charCount">0 / 150</div>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    $(document).ready(function(){
+
+      // Live character count for bio
+      $("#bio").on("input", function() {
+        let count = $(this).val().length;
+        $("#charCount").text(count + " / 150");
+      });
+
+      // Toggle password visibility
+      $("#togglePass").click(function(){
+        let passField = $("#password");
+        if(passField.attr("type") === "password") {
+          passField.attr("type","text");
+          $(this).text("Hide");
+        } else {
+          passField.attr("type","password");
+          $(this).text("Show");
+        }
+      });
+
+      // Form validation
+      $("#regForm").submit(function(e){
+        e.preventDefault();
+        let valid = true;
+
+        $(".error").text(""); // clear errors
+
+        if($("#username").val().trim() === ""){
+          $("#usernameError").text("Username is required");
+          valid = false;
+        }
+        if($("#email").val().trim() === ""){
+          $("#emailError").text("Email is required");
+          valid = false;
+        }
+        if($("#password").val().trim() === ""){
+          $("#passwordError").text("Password is required");
+          valid = false;
+        }
+        if($("#confirmPassword").val().trim() === ""){
+          $("#confirmPasswordError").text("Confirm Password is required");
+          valid = false;
+        } else if($("#confirmPassword").val() !== $("#password").val()){
+          $("#confirmPasswordError").text("Passwords do not match");
+          valid = false;
+        }
+        if(!$("input[name='gender']:checked").val()){
+          $("#genderError").text("Select a gender");
+          valid = false;
+        }
+        if($("input[name='interests']:checked").length === 0){
+          $("#interestsError").text("Select at least one interest");
+          valid = false;
+        }
+
+        if(valid){
+          alert("Form submitted successfully!");
+        }
+      });
+    });
+  </script>
+</body>
+</html>
